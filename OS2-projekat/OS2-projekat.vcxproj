@@ -15,9 +15,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Desktop\javniTest\particija-VS2013\part.h" />
     <ClInclude Include="fs.h" />
     <ClInclude Include="KernelFS.h" />
+    <ClInclude Include="part.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\Desktop\javniTest\particija-VS2013\p1.ini" />

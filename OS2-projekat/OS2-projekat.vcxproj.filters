@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Desktop\javniTest\particija-VS2013\part.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="fs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KernelFS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="part.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
