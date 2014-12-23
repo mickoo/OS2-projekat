@@ -10,9 +10,14 @@ public:
 	static char slova[26];
 	static Partition *particije[26];
 	static int pop;
+	
 
 
 	static char mount(Partition* p);
+	static char unmount(char a);
+	static char format(char part);
+	static int getN(Partition *p);
+
 
 };
 
