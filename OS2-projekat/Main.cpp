@@ -13,6 +13,6 @@ void main()
 	Partition *p = new Partition("p1.ini");
 	KernelFS::mount(p);
 	
-	cout << KernelFS::getN(p)<<endl;
+	KernelFS::format('A');
 	
 }
