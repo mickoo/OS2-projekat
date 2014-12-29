@@ -1,6 +1,8 @@
 #ifndef _FS_H_
 #define _FS_H_
 
+#include "KernelFS.h"
+
 typedef unsigned long BytesCnt;
 typedef unsigned long EntryNum;
 

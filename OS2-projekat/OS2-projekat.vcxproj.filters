@@ -24,6 +24,12 @@
     <ClInclude Include="part.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PartHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PartHeaderList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\Desktop\javniTest\particija-VS2013\p1.ini">
@@ -44,6 +50,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KernelFS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PartHeader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PartHeaderList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
