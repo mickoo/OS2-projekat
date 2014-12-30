@@ -1,21 +1,35 @@
 #include"PartHeader.h"
 #include <iostream>
+#include<cstring>
+#include<cstdlib>
 using namespace std;
 
-PartHeader::PartHeader(char sl, int brUl,int NN)
+PartHeader::PartHeader(char sl, int brUl,int NN,Partition* p)
 {
+	PartHeader::part = p;
+	PartHeader::brojROOTulaza = 0;
 	PartHeader::slovo = sl;
 	PartHeader::brFAT32ulaza = brUl;
 	PartHeader::slobodni = NN;
 	PartHeader::sadrKor = NN;
 	PartHeader::N = NN;
+	if (part->getNumOfClusters() > MAX)brojKlastera = MAX;
+	else brojKlastera = part->getNumOfClusters();
 
 	PartHeader::initFAT();
 	PartHeader::initRootEntry();
-
+	PartHeader::initClusters();
+	PartHeader::procitajSveKlastereSaDiska();
+	
 }
 
-PartHeader::~PartHeader(){ delete[] FAT; }
+PartHeader::~PartHeader(){
+	delete[] FAT;
+	
+		for (int i = 0; i < brojKlastera; i++)delete clusters[i];
+		delete[] clusters;
+
+}
 
 void PartHeader::initFAT()
 {
@@ -42,10 +56,75 @@ void PartHeader::initRootEntry(){
 
 void PartHeader::pisiFAT()
 {
-	for (int i = 0; i < 50; i++)
-		cout <<i<<":"<< PartHeader::FAT[i] << endl;
-	cout << "Prvi slobodan ulaz :" << PartHeader::slobodni << endl;
-	cout << "Sadrzaj ROOT-a :" << PartHeader::sadrKor << endl;
-	cout << "Broj ulaza u FAT :" << PartHeader::brFAT32ulaza << endl;
-	cout << PartHeader::root.ext <<endl;
+	
+	int j;
+	for (int i = 0; i < 80; i = i + 4){
+		memcpy(&j, &clusters[0][i], 4);
+		cout << j << endl;
+	}
+
+	cout << "Slobodni= " << slobodni << endl;
+	cout << "brFatUlaza= " << brFAT32ulaza << endl;
+	cout << "sadrzaj Korena= " << sadrKor << endl;
+	cout << "Broj ulaza Korena= " << brojROOTulaza << endl;
+	
+}
+
+void PartHeader::initClusters()//pravi niz klastera velicine do MAX(50 000) koji se kesiraju
+{
+
+		clusters = new char*[brojKlastera];
+		for (int i = 0; i < brojKlastera; i++)clusters[i] = new char[2048];
+	
+}
+
+void PartHeader::procitajSveKlastereSaDiska()
+{
+	for (int i = 0; i < brojKlastera; i++)
+	{
+		part->readCluster(i, clusters[i]);
+	}
+}
+
+void PartHeader::upisiSveKlastereNaDisk()
+{
+	for (int i = 0; i < brojKlastera; i++)
+	{
+		part->writeCluster(i, clusters[i]);
+	}
+}
+
+void PartHeader::procitajKlastere(int min, int max)
+{
+	for (int i = min; i <= max; i++)
+		part->readCluster(i, clusters[i]);
+}
+
+void PartHeader::upisiKlastere(int min, int max)
+{
+	for (int i = min; i <= max; i++)
+		part->writeCluster(i, clusters[i]);
+}
+
+void PartHeader::upisiHeaderNaDisk()
+{
+	int k = 0;
+	for (int i = 0; i < N && k<brFAT32ulaza; i++)
+		for (int j = 0; j < 2048 && k<brFAT32ulaza; j=j+4)
+		{
+		if (i == 0 && j == 0){ memcpy(&clusters[0][0], &slobodni, 4); }
+		if (i == 0 && j == 4)memcpy(&clusters[0][4], &brFAT32ulaza, 4);
+		if (i == 0 && j == 8)memcpy(&clusters[0][8], &sadrKor, 4);
+		if (i == 0 && j == 12)memcpy(&clusters[0][12], &brojROOTulaza, 4);
+	
+		if (i != 0 || (j != 0 && j != 4 && j != 8 && j != 12)){
+			memcpy(&clusters[i][j], &FAT[k], 4);
+			k++;
+
+	
+		}
+		}
+
+	upisiKlastere(0, N);
+
 }
