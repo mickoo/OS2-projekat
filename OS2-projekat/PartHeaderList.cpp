@@ -27,3 +27,13 @@ void PartHeaderList::ispisi()
 		cout << "Particija: "<<(*it)->slovo << endl;
 	}
 }
+
+PartHeader* PartHeaderList::dohvati(char part)
+{
+	PartHeader* r = NULL;
+	for (list<PartHeader*>::iterator it = lista.begin(); it != lista.end(); it++)
+	{
+		if ((*it)->slovo == part){ r = (*it); break; }
+	}
+	return r;
+}

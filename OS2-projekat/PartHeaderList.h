@@ -15,7 +15,7 @@ public:
 	static void add(PartHeader* p);
 	static void izbaci(char slovo);
 	static void ispisi();
-	
+	static PartHeader* dohvati(char part);
 
 };
 

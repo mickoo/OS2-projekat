@@ -13,6 +13,7 @@ class PartHeader
 
 	char slovo;//slovo particije
 	Entry root;
+	int ROOTbrK, ROOTindeks;
 
 	int slobodni;//broj ulaza prvog slobodnog klastera
 	int sadrKor;//broj ulaza klastera u kojem je sadrzaj ROOT-a
@@ -31,7 +32,7 @@ class PartHeader
 	~PartHeader();
 	void initFAT();
 	void initRootEntry();//ROOT Entry pocetni sadrzaj
-	void pisiFAT();
+	void pisiHeader();
 	void initClusters();
 	void procitajSveKlastereSaDiska();
 	void upisiSveKlastereNaDisk();
@@ -39,6 +40,7 @@ class PartHeader
 	void procitajKlastere(int min, int max);//min-donja granica,a max-gornja granica
 	void upisiKlastere(int min, int max);
 	void upisiHeaderNaDisk();
+	void upisiROOTEntryUclusters();
 
 };
 

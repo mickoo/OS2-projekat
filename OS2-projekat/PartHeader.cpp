@@ -2,10 +2,12 @@
 #include <iostream>
 #include<cstring>
 #include<cstdlib>
+#include<fstream>
 using namespace std;
 
 PartHeader::PartHeader(char sl, int brUl,int NN,Partition* p)
 {
+	
 	PartHeader::part = p;
 	PartHeader::brojROOTulaza = 0;
 	PartHeader::slovo = sl;
@@ -16,10 +18,14 @@ PartHeader::PartHeader(char sl, int brUl,int NN,Partition* p)
 	if (part->getNumOfClusters() > MAX)brojKlastera = MAX;
 	else brojKlastera = part->getNumOfClusters();
 
+	PartHeader::ROOTbrK = N - 1;
+	PartHeader::ROOTindeks = (4 * part->getNumOfClusters() + 16) % 2048;
+
 	PartHeader::initFAT();
 	PartHeader::initRootEntry();
 	PartHeader::initClusters();
 	PartHeader::procitajSveKlastereSaDiska();
+	
 	
 }
 
@@ -54,19 +60,32 @@ void PartHeader::initRootEntry(){
 	
 }
 
-void PartHeader::pisiFAT()
+void PartHeader::pisiHeader()
 {
 	
-	int j;
-	for (int i = 0; i < 80; i = i + 4){
-		memcpy(&j, &clusters[0][i], 4);
-		cout << j << endl;
-	}
+	ofstream izlaz;
+	int k = -4;
+	izlaz.open("C:\\Users\\MyAsus\\Desktop\\OS2-izlaz\\izlaz.txt");
+	izlaz <<"Header particije: "<< slovo << endl;
+	for (int i = 0; i <N; i++)
+		for (int j = 0; j < 2048; j = j + 4){
+		int br;
+		memcpy(&br, &clusters[i][j], 4);
+		izlaz <<k++<<": "<< br << endl;
+		}
 
-	cout << "Slobodni= " << slobodni << endl;
-	cout << "brFatUlaza= " << brFAT32ulaza << endl;
-	cout << "sadrzaj Korena= " << sadrKor << endl;
-	cout << "Broj ulaza Korena= " << brojROOTulaza << endl;
+	char n[8];
+	char e[3];
+	int pr,br;
+	memcpy(&n, &clusters[ROOTbrK][ROOTindeks], 8);
+	memcpy(&e, &clusters[ROOTbrK][ROOTindeks+8], 3);
+	memcpy(&pr, &clusters[ROOTbrK][ROOTindeks+12], 4);
+	memcpy(&br, &clusters[ROOTbrK][ROOTindeks+16], 4);
+	izlaz << ((ROOTbrK) * 2048 + ROOTindeks)/4-4 << ": " << n << endl;
+	izlaz << e << endl;
+	izlaz << pr << endl;
+	izlaz << br << endl;
+	izlaz.close();
 	
 }
 
@@ -124,7 +143,13 @@ void PartHeader::upisiHeaderNaDisk()
 	
 		}
 		}
+	PartHeader::upisiROOTEntryUclusters();
 
-	upisiKlastere(0, N);
+	upisiKlastere(0, N-1);
 
+}
+
+void PartHeader::upisiROOTEntryUclusters()
+{
+	memcpy(&clusters[ROOTbrK][ROOTindeks], &root, 20);
 }

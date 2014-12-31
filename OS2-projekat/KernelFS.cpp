@@ -59,13 +59,10 @@ char KernelFS::format(char part)
 	N = KernelFS::getN(p);//N je broj klastera za FAT32 i ROOT
 	
 	header = new PartHeader(KernelFS::slova[indeks],p->getNumOfClusters(),N,p);
-	header->pisiFAT();
 	PartHeaderList::add(header);
+	header->upisiHeaderNaDisk();//inicijalizacija prva cetiri int-a, FAT tabele i ROOT-a 
 
-	
-	
-	
-	
+
 	return '1';
 	
 }
@@ -74,9 +71,10 @@ int KernelFS::getN(Partition* p)
 {
 
 	int velK = 2048;
-	int n = 20 + 12 + 4 * p->getNumOfClusters();
+	int n = 20 + 16 + 4 * p->getNumOfClusters();//prvih N klastera sluzi za smestanje ROOT-Entry-a,
 	double rez =( n / velK);
 	if (n%velK == 0)return rez;
 	else return rez + 1;
 
 }
+
